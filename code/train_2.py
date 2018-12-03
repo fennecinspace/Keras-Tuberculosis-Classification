@@ -3,16 +3,16 @@ from numpy import array
 from common import readcsv, BASE_DIR, os
 
 train_path = os.path.join(*[BASE_DIR, 'data', 'train.csv'])
-test_path = os.path.join(*[BASE_DIR, 'data', 'test.csv'])
 
 train = readcsv(train_path)[1:]
-test = readcsv(test_path)[1:]
 
-x_train = array([row[:-1] for row in train])
-y_train = array([row[-1] for row in train])
+train_70 = len(train)//3*2
 
-x_test = array([row[:-1] for row in test])
-y_test = array([row[-1] for row in test])
+x_train = array([row[:-1] for row in train[:train_70]])
+y_train = array([row[-1] for row in train[:train_70]])
+
+x_test = array([row[:-1] for row in train[train_70:]])
+y_test = array([row[-1] for row in train[train_70:]])
 
 ## model
 model = tf.keras.models.Sequential()
@@ -33,4 +33,4 @@ model.fit(x_train, y_train, epochs = 3)
 val_loss, val_acc = model.evaluate(x_test, y_test)
 print("Loss {} \nAccuracy {}".format(val_loss, val_acc))
 
-model.save_weights('2_weights.h5')
+model.save_weights('weights.h5')
